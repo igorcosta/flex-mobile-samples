@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:View xmlns:fx="http://ns.adobe.com/mxml/2009"
+		xmlns:s="library://ns.adobe.com/flex/spark"
+		xmlns:controls="com.riacycle.controls.*"
+		skinClass="MeuViewSkin" title="HomeView">
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+	</fx:Declarations>
+	
+	<fx:Script>
+		<![CDATA[
+			import spark.primitives.BitmapImage;
+	
+			public var img:String = "assets/backsample.png";
+			
+			[SkinPart(required="false")]
+			public var backgroundImage:BitmapImage;
+			
+			override protected function partAdded(partName:String, instance:Object):void
+			{
+				super.partAdded(partName,instance);
+				
+				if(instance == backgroundImage)
+				{
+					BitmapImage(backgroundImage).source = img;
+				}
+			}
+			
+		]]>
+	</fx:Script>
+	<s:actionContent>
+		<controls:CheckVersion/>
+	</s:actionContent>
+	<s:Scroller width="100%" height="100%">
+			<s:Group width="100%" height="100%">
+				<s:layout>
+					<s:VerticalLayout/>
+				</s:layout>
+					<s:TextInput/>
+					<s:TextInput/>
+					<s:TextInput/>
+					<s:TextInput/>
+					<s:TextInput/>
+					<s:TextInput/>
+					<s:TextInput/>
+			</s:Group>
+	</s:Scroller>
+</s:View>

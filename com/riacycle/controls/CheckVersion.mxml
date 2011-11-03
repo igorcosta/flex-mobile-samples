@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		  xmlns:s="library://ns.adobe.com/flex/spark" maxHeight="65" creationComplete="init(event)">
+
+	<s:states>
+		<s:State name="version_state"/>
+		<s:State name="busy_state"/>
+	</s:states>
+	
+	<fx:Script>
+		<![CDATA[
+			import flash.events.MouseEvent;
+			
+			import mx.events.FlexEvent;
+			import mx.rpc.events.ResultEvent;
+			
+			private var regNameSpace:RegExp = new RegExp("xmlns[^\"]*\"[^\"]*\"", "gi");
+			private var cleanXML:String;
+			private var v:XML;
+			private var current_Version:String;
+			protected function init(event:FlexEvent):void
+			{
+				cleanXML = Version.toXMLString();
+				cleanXML = cleanXML.replace(regNameSpace,'');
+				v = new XML(cleanXML);
+				
+				btn_check.label = String(v.versionNumber[0]);
+				current_Version = v.versionNumber[0];
+				this.addEventListener(MouseEvent.CLICK,checkVersion);
+			}
+			
+			protected function checkVersion(event:MouseEvent):void
+			{
+				currentState = 'busy_state';
+				versionService.send();
+			}
+			
+			protected function getVersionCheckResult(event:ResultEvent):void
+			{
+				if(String(event.result)!= current_Version)
+				{
+					// alertar usuário
+					trace('versão nova disponível');
+				}
+				currentState = 'version_state';
+			}
+			
+		]]>
+	</fx:Script>
+	<fx:Declarations>
+		<s:HTTPService resultFormat="e4x" result="getVersionCheckResult(event)" id="versionService" url="http://localhost/version.php" useProxy="false"/>
+		<fx:XML format="e4x" id="Version" source="Teste-app.xml"/>
+	</fx:Declarations>
+	<s:Button id="btn_check" includeIn="version_state"/>
+	<s:BusyIndicator includeIn="busy_state"/>
+</s:Group>
